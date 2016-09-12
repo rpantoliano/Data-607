@@ -1,0 +1,23 @@
+---
+title: "Data 607 Project 1"
+author: "Richard Pantoliano Jr"
+date: "September 11, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Background
+This end of the project is incredibly simple.  The task is to load a CSV file containing movie titles and ratings into a data frame.
+
+#Assumptions:
+1) The file is named "ratings.csv"
+2) The file is in the present working directory in which the R markdown file is executed.
+
+## Code
+```{r}
+ratings_data <- read.csv("ratings.csv")
+print(ratings_data)
+```

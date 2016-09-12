@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"Data 607 Project 1\"\nauthor: \"Richard Pantoliano Jr\"\ndate: \"September 11, 2016\"\noutput: html_document\n---\n\n```{r setup, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\n```\n\n## Background\nThis end of the project is incredibly simple.  The task is to load a CSV file containing movie titles and ratings into a data frame.\n\n#Assumptions:\n1) The file is named \"ratings.csv\"\n2) The file is in the present working directory in which the R markdown file is executed.\n\n## Code\n```{r}\nratings_data <- read.csv(\"ratings.csv\")\nprint(ratings_data)\n```",
+    "created" : 1473650371029.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4035662392",
+    "id" : "90C14346",
+    "lastKnownWriteTime" : 1473650633,
+    "last_content_update" : 1473650633711,
+    "path" : "~/R/Data 607/Project 1/Pantoliano-Proj1.Rmd",
+    "project_path" : "Pantoliano-Proj1.Rmd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
