@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# Setup\nlibrary(stringr)\nraw.data <-\"555-1239Moe Szyslak(636) 555-0113Burns, C. Montgomery555-6542Rev. Timothy Lovejoy555 8904Ned Flanders636-555-3226Simpson, Homer5553642Dr. Julius Hibbert\"\nname <- unlist(str_extract_all(raw.data, \"[[:alpha:]., ]{2,}\"))\n\nname_vector <- function(names_list)\n{\n  output_list <- vector(length(names_list)\n  for(i in 1:length(name_list))\n  {\n    splitname <- str_split(names_list[i], \" \")\n    if(str_count(splitname[1], \",\") == 0)\n    {\n      \n    }\n  }\n  \n}\n# Remove title & initials\nname_scrubbed <- str_replace(name, \"[[:alpha:]]{1,3}\\\\.\",\"\")\nname_scrubbed <- str_trim(name_scrubbed)\n\n# Process the scrubbed name list\noutput_list <- vector(length(name_scrubbed))\nfor(i in 1:length(name_scrubbed))\n{\n  if(str_count(splitname[1], \",\") == 0)\n        output_list[i] <- c(splitname[1], \" \", splitname[2])\n  else\n  {\n    splitname[2] <- str_replace(splitname[2],\",\",\"\")\n    output_list[i] <- c(splitname[2], \" \", splitname[1])\n  }\n}\n\nprint(output_list)\n\n\n# Deterime if the person has a title\ntitle <- str_detect(name, \"[[:alpha:]]{2,3}\\\\.\")\n\n\n\n# Detect the second name\nsecond_name <- str_count(name,  \"[[:alpha:]., ]\") == 3\nsecond_name\n\ntest <- str_count(name[5],  )\ntest\nname[5]\n\n\n# Problem 4\n\n# 1) matches a number of 1 or more digits, ending with a dollar sign\nstr1 <- \"test214$555 65$  3456767$ $\"\nprint(str_extract_all(str1, \"[0-9]+\\\\$\"))\n\n# 2) \\\\b[a-z]{1,4}\\\\b is word of 1 to 4 lower-case characters\n\nstr2 <- \"The boy walked the walk.\"\nprint(str_extract_all(str2, \"\\\\b[a-z]{1,4}\\\\b\"))\n\n# 3) .*?\\\\.txt$ matches any number of characters, followed by \".txt\" and it must be at the end of the line\n\nstr3a <- \"test1.txt\\n test2.txt\"\nstr3b <- \"hello3.txt\"\nprint(str_extract_all(str3a, \".*?\\\\.txt$\"))\nprint(str_extract_all(str3b, \".*?\\\\.txt$\"))\n\n# 4) \\\\d{2}/\\\\{2}/\\\\d{4} matches 2 digits / 2 digits / 4 digits,\n# in the same way that the USA does month / day / year date format\nstr4 <- \"99/99/9999 1/12/1111 12/1/1234 01/01/01 09/18/2016, a/wrong/example\"\nprint(str_extract_all(str4, \"\\\\d{2}/\\\\d{2}/\\\\d{4}\"))\n\n# 5) <(.+?)>.+?</\\\\1>\nstr5 <- \"asdfasd sadfasdf /fasdfsd eafasdf /safasdfsdaf asdfasdf\"\nprint(str_extract_all(str5, \"<(.+?)>.+?</\\\\1>\"))\n\n\nstr5 <- \"<test>hello</test><test5>world</test5>\"\nprint(str_extract_all(str5, \"<(.+?)>.+?</\\\\1>\"))\n\n\nhas_title <- str_detect(name, \"[[:alpha:]]{2,3}\\\\.\")\nprint(has_title)\n\n\nsplit_names <- c(str_split(name, \" \"))\nhas_second <- (lengths(split_names) > 2) & !has_title\n\n\n",
+    "created" : 1474243524029.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "759465659",
+    "id" : "D4EE1D5B",
+    "lastKnownWriteTime" : 1474257634,
+    "last_content_update" : 1474257634692,
+    "path" : "~/R/Data 607/Week 3 Assignment/Pantoliano-Week3.R",
+    "project_path" : "Pantoliano-Week3.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

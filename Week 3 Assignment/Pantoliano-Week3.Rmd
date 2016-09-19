@@ -1,0 +1,98 @@
+---
+title: "Week 3 Assignment"
+author: "Richard Pantoliano Jr"
+date: "September 18, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(stringr)
+```
+
+## Problem 3
+Setup:
+```{r}
+raw.data <-"555-1239Moe Szyslak(636) 555-0113Burns, C. Montgomery555-6542Rev. Timothy Lovejoy555 8904Ned Flanders636-555-3226Simpson, Homer5553642Dr. Julius Hibbert"
+name <- unlist(str_extract_all(raw.data, "[[:alpha:]., ]{2,}"))
+print(name)
+```
+#(a) Use the tools of this chapter to rearrange the vector so that all elements conform to the standard first_name last_name.
+```{r}
+# Remove title & initials
+name_scrubbed <- str_replace(name, "[[:alpha:]]{1,3}\\.","")
+name_scrubbed <- str_trim(name_scrubbed)
+
+# Process the scrubbed name list
+output_list <- list()
+for(i in 1:length(name_scrubbed))
+{
+  splitname <- str_split(name_scrubbed[i], " ")
+  if(str_count(splitname[1], ",") == 0)
+        output_list[i] <- paste(splitname[1], splitname[2], sep = " ")
+  else
+  {
+    splitname[2] <- str_replace(splitname[2],",","")
+    output_list[i] <- paste(splitname[2], splitname[1], sep=" ")
+  }
+}
+
+print(output_list)
+```
+
+#(b)Construct a logical vector indicating whether a character has a title (i.e., Rev.and Dr.).
+This code checks for two or three character alphabetical characters, followed by a period.
+```{r}
+has_title <- str_detect(name, "[[:alpha:]]{2,3}\\.")
+print(has_title)
+```
+#(c) Construct a logical vector indicating whether a character has a second name.
+This code splits the original name string by the space characters.  All names that contain a second name must have more than 2 parts.  For this particular data set, all individuals with second names do not have titles 
+```{r }
+split_names <- c(str_split(name, " "))
+has_second <- (lengths(split_names) > 2) & !has_title
+print(has_second)
+```
+
+## Problem 4
+Describe the types of strings that conform to the following regular expressions and
+construct an example that is matched by the regular expression.
+
+#(a) [0-9]+\\\\$
+This pattern matches one or more digits followed by the dollar sign character
+```{r prob4a}
+str1 <- "test214$555 65$  3456767$ $"
+print(str_extract_all(str1, "[0-9]+\\$"))
+```
+
+#(b) \\\\b[a-z]{1,4}\\\\b
+This pattern matches all words in a string constructed of lower-case letters and having a length between 1 and 4 characters
+```{r prob4b}
+str2 <- "The boy walked the walk."
+print(str_extract_all(str2, "\\b[a-z]{1,4}\\b"))
+```
+
+#(c) .*?\\\\.txt$
+
+This pattern matches any number of characters, ending with ".txt" and that entire string occurring at the end of the line
+
+```{r prob4c}
+str3a <- "test1.txt\n test2.txt"
+str3b <- "hello3.txt"
+print(str_extract_all(str3a, ".*?\\.txt$"))
+print(str_extract_all(str3b, ".*?\\.txt$"))
+```
+
+#(d) \\\\d{2}/\\\\d{2}/\\\\d{4}
+This pattern matches 2 digits / 2 digits / 4 digits, in the same way that the USA does the mm/dd/yyyy date format
+```{r prob4d}
+str4 <- "99/99/9999 1/12/1111 12/1/1234 01/01/01 09/18/2016, a/wrong/example"
+print(str_extract_all(str4, "\\d{2}/\\d{2}/\\d{4}"))
+```
+
+#(e) <(.+?)>.+?</\\\\1>
+This pattern matches markup tags (e.g. XML or HTML)
+```{r prob4e}
+str5 <- "<test>hello</test><test5>world</test5>"
+print(str_extract_all(str5, "<(.+?)>.+?</\\1>"))
+```
