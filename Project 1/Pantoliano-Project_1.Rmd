@@ -1,0 +1,122 @@
+---
+title: "Project 1"
+author: "Richard Pantoliano Jr"
+date: "September 25, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(stringr)
+```
+
+## Project Description
+
+This assignment required us to process a text file containing a cross table from a chess tournament and create a CSV in the format:
+
+> Name, State, Points, Ranking before Tournament, Ranking after Tournament
+
+I approached this project in 4 steps:
+
+1. read text file containing the cross table & remove unnecessary header info
+2. parse table
+3. analyze the match data to calculate new rankings
+4. write the file to a CSV
+
+# Read the text file and remove header
+The readline function built into R easily allows for reading all lines of a file
+```{r read_table}
+tournament_file <- readLines(file("tournamentinfo.txt"), warn = FALSE)
+```
+
+I then removed the 4 lines worth of header information
+```{r preprocess}
+tournament_file <- tournament_file[-1]
+tournament_file <- tournament_file[-1]
+tournament_file <- tournament_file[-1]
+tournament_file <- tournament_file[-1]
+```
+
+# Parse the Table
+At this point, we need to parse the table for each entrant into the tournament.  The important information in each entry consists of:
+
+1. A line containing the tournament #, name, total points, result of each of 7 rounds.  Each
+2. A line containing the state of origin for the player, ranking
+3. A line of underscores indicating the end of the entry
+
+Each piece of information on a line is separated by a pipe (|).
+
+I chose to process the file via loop which would traverse each of the remaining lines of the table.  For each line:
+
+1. Split the string based on the pipe as a delimiter
+2. Trim whitespace from all of the strings
+3. Determine the index for where each piece of information would be placed in the separate vectors for each piece of information we wish to record in the csv
+4. If it is the first line of the participant entry, store the name, points, and list of match info into the appropriate vectors
+5. If it is the second line of the participant entry, store the state and old rank in the appropriate vectors
+
+```{r parsed}
+names_list <- vector()
+states_list <- vector()
+points_list <- vector()
+old_rank_list <- vector()
+new_rank_list <- vector()
+matches_list <- vector()
+
+for(index in 1:length(tournament_file))
+{
+  dedelimit_line <- strsplit(tournament_file[index], "\\|")
+  dedelimit_line <- str_trim(dedelimit_line[[1]])
+  str_trim(dedelimit_line)
+  
+  new_index <- ceiling(as.double(index) / 3)
+  if(index %% 3 == 1)
+  {
+    names_list[new_index] <- dedelimit_line[2]
+    points_list[new_index] <- dedelimit_line[3] 
+    matches_list[new_index] <- list(dedelimit_line[4:10])
+  }
+  else if (index %% 3 == 2)
+  {
+    states_list[new_index] <- dedelimit_line[1]
+    rank <- str_extract(dedelimit_line[2], "R:\\s+\\d+")
+    old_rank_list[new_index] <- str_extract(rank, "\\d+")
+  }
+}
+```
+
+# Analyze Match Info to Determine New Ranking
+
+Based on the assignment requiremments, we consider both a win or a draw as a win for the participant.  For that reason, we check for either the W or D characters in the match list for each participant to see if they should get credit for a win.  If the person does get credit for the win, we determine the ranking of the person that s/he beat and add that to an accumulator var.  Finally, we divide that accumulator variable by the number of wins that person had, then store in in the vector containing the new rankings after the tournament.
+```{r match_info}
+for(index in 1:length(names_list))
+{
+  wcount <- 0
+  waccum <- 0 
+  for(mindex in 1:7)
+  {
+    is_winner <- str_detect(matches_list[[index]][mindex], "W|D")[[1]]
+    if(is_winner)
+    {
+      wcount <- wcount + 1;
+      waccum <- waccum + as.integer(old_rank_list[as.integer(str_extract(matches_list[[index]][mindex], "\\d+"))])
+    }
+  }
+  if(wcount > 0)
+    new_rank_list[index] <- round(waccum / wcount)
+  else
+    new_rank_list[index] <- old_rank_list[index]
+}
+
+
+```
+
+# Write the CSV
+This is another simple step.  First, I create a dataframe from vectors representing all of the tournament information that we wish to record
+```{r create_frame}
+df <- data.frame(names_list,states_list,points_list,old_rank_list,new_rank_list)
+```
+
+Finally, I use the write.csv function to write that dataframe to the file "tournament.csv"
+```{r write_file}
+write.csv(df, file = "tournament.csv", row.names = FALSE, quote=FALSE)
+```

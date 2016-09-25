@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(stringr)\n\ntournament_file <- readLines(con <- file(\"tournamentinfo.txt\"), warn = FALSE)\ntournament_file <- tournament_file[-1]\ntournament_file <- tournament_file[-1]\ntournament_file <- tournament_file[-1]\ntournament_file <- tournament_file[-1]\nnames_list <- vector()\nstates_list <- vector()\npoints_list <- vector()\nold_rank_list <- vector()\nnew_rank_list <- vector()\nmatches_list <- vector()\n\n# Parse file\nfor(index in 1:length(tournament_file))\n{\n  dedelimit_line <- strsplit(tournament_file[index], \"\\\\|\")\n  dedelimit_line <- str_trim(dedelimit_line[[1]])\n  str_trim(dedelimit_line)\n  \n  new_index <- ceiling(as.double(index) / 3)\n  if(index %% 3 == 1)\n  {\n    names_list[new_index] <- dedelimit_line[2]\n    points_list[new_index] <- dedelimit_line[3] \n    matches_list[new_index] <- list(dedelimit_line[4:10])\n  }\n  else if (index %% 3 == 2)\n  {\n    states_list[new_index] <- dedelimit_line[1]\n    rank <- str_extract(dedelimit_line[2], \"R:\\\\s+\\\\d+\")\n    old_rank_list[new_index] <- str_extract(rank, \"\\\\d+\")\n  }\n}\n\n\n# Parse matches list to calculate new ranking\nfor(index in 1:length(names_list))\n{\n  wcount <- 0\n  waccum <- 0 \n  for(mindex in 1:7)\n  {\n    is_winner <- str_detect(matches_list[[index]][mindex], \"W|D\")[[1]]\n    if(is_winner)\n    {\n      wcount <- wcount + 1;\n      waccum <- waccum + as.integer(old_rank_list[as.integer(str_extract(matches_list[[index]][mindex], \"\\\\d+\"))])\n    }\n  }\n  if(wcount > 0)\n    new_rank_list[index] <- round(waccum / wcount)\n  else\n    new_rank_list[index] <- old_rank_list[index]\n}\n\ndf <- data.frame(names_list,states_list,points_list,old_rank_list,new_rank_list)\nwrite.csv(df, file = \"tournament.csv\", row.names = FALSE, quote=FALSE)\n\n",
+    "created" : 1474817070324.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2832146313",
+    "id" : "BC36E468",
+    "lastKnownWriteTime" : 1474833934,
+    "last_content_update" : 1474833934767,
+    "path" : "~/R/Data 607/Project 1/processing.R",
+    "project_path" : "processing.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
