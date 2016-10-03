@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "library(\"dplyr\")\nlibrary(\"tidyr\")\n\nairline_df <- read.csv(\"Airline.csv\")\nairline_df[2,1] <- airline_df[1,1]\nairline_df[4,1] <- airline_df[3,1]\n\nnames(airline_df)[1] <- \"Airline\"\nnames(airline_df)[2] <- \"Status\"\nairline2_df <- airline_df %>%\n                  gather(\"Location\", \"n\",3:7)\n\n\n# Filter observation by airline\nalaska_df <- airline2_df %>% filter(Airline == \"Alaska\")\namwest_df <- airline2_df %>% filter(Airline == \"AM West\")\n\nalaska_df\n\n\n\n\n# On-time flights\nontime_df <-\n  airline2_df %>%\n  filter(Status == \"on time\") %>%\n  select(-Status) %>%\n  group_by(Location)\n\n# Delayed flights\ndelayed_df <-\n  airline2_df %>%\n  filter(Status == \"delayed\") %>%\n  select(-Status) %>%\n  group_by(Location)\ndelayed_df\n",
+    "created" : 1475458178498.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1243268752",
+    "id" : "824BCCCA",
+    "lastKnownWriteTime" : 1475462548,
+    "last_content_update" : 1475462548784,
+    "path" : "~/R/Data 607/Week 5/Week5.R",
+    "project_path" : "Week5.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

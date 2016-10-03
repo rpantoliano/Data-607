@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: 'Week 5: Tidying Data'\nauthor: \"Richard Pantoliano Jr\"\ndate: \"October 2, 2016\"\noutput: html_document\n---\n\n```{r setup, include=FALSE}\nknitr::opts_chunk$set(echo = TRUE)\nlibrary(\"tidyr\")\nlibrary(\"dplyr\")\n```\n\n## Problem\nGiven the data set below, tidy and reshape the data to compare arrival and departure times between the two airlines.\n![Airline Data](data_table.png)\n\n## Creating the CSV File\nFirst, I created a CSV file representing the data pictured above.  I assumed each cell of the table shown was a value to be represented in the CSV file, with blank cells representing an empty value.  The resulting file is:\n![Airline Data as a CSV file](data_csv.png)\n\n## Reading and initial processing of the CSV Data\nReading the initial file is easy, since R has a function to do so.\n```{r readfile}\nairline_df <- read.csv(\"Airline.csv\")\nprint(airline_df)\n```\n\nLooking at the dataframe, we notice that the column headers for the airline and the status of the observations are not meaningful, so we shall rename them:\n```{r add_header}\nnames(airline_df)[1] <- \"Airline\"\nnames(airline_df)[2] <- \"Status\"\nprint(airline_df)\n```\n\nWe also notice that, for the \"delayed\" data observations, we do not have the airline associated with those observations listed, so let us change that as well:\n```{r add_airline}\nairline_df[2,1] <- airline_df[1,1]\nairline_df[4,1] <- airline_df[3,1]\nprint(airline_df)\n```\n\n## Separating the data into various useful frames\n# Lengthening Data\nFirst, we can lengthen the data table so that each row contains the Airline, Status of Flight, City of flights, and # of flights of that type:  \n```{r lengthen_data}\nlong_df <- airline_df %>%\n                  gather(\"Location\", \"n\",3:7)\nprint(long_df)\n```\n\n# By Airline\n```{r by_airline}\n# Filter observation by airline\nalaska_df <- long_df %>% filter(Airline == \"Alaska\") %>% group_by(Location)\namwest_df <- long_df %>% filter(Airline == \"AM West\") %>% group_by(Location)\nprint(alaska_df)\nprint(amwest_df)\n```\nTotal number of flights to each location by each airline\n```{r total_flights}\nalaska_total <- alaska_df %>% group_by(Location) %>% summarise(total = sum(n))\namwest_total <- amwest_df %>% group_by(Location) %>% summarise(total = sum(n))\nprint(alaska_total)\nprint(amwest_total)\n```\n# By On time Flights\n```{r by_ontime}\n# On-time flights\nontime_df <-\n  long_df %>%\n  filter(Status == \"on time\") %>%\n  select(-Status) %>%\n  group_by(Location)\nprint(ontime_df)\n```\n\n# By Delayed Flights\n```{r by_delayed}\ndelayed_df <-\n  long_df %>%\n  filter(Status == \"delayed\") %>%\n  select(-Status) %>%\n  group_by(Location)\nprint(delayed_df)\n```",
+    "created" : 1475462567415.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "581006276",
+    "id" : "10D3FC68",
+    "lastKnownWriteTime" : 1475465013,
+    "last_content_update" : 1475465013676,
+    "path" : "~/R/Data 607/Week 5/Pantoliano-Week5.Rmd",
+    "project_path" : "Pantoliano-Week5.Rmd",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}
